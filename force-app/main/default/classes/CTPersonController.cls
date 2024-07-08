@@ -62,4 +62,126 @@ public with sharing class CTPersonController {
         return healthCountMap;
 
     }
+
+     /**
+     * get cohabitants
+     * @param Set<Id> personIds
+     * @return Set<Id>
+    */
+    public static  Set<Id> getCohabitants(Set<Id> personIds,Set<Id> alreadyProcessed){
+        Set<Id> cohabitants=new Set<Id>();
+        List<String> healthStatuses=new List<String>{'Green','Yellow'};
+        List<People_Tracing__c> peopleTraces=[SELECT Id, Contact_Type__c, Person_1__c, Person_2__c 
+                                              FROM People_Tracing__c WHERE (Person_1__c in:personIds OR Person_2__c in:personIds) 
+                                              AND Contact_Type__c='Cohabitant' AND 
+                                              (Person_1__r.Health_Status__c in:healthStatuses 
+                                              OR Person_2__r.Health_Status__c in:healthStatuses)
+                                              ];
+        for(People_Tracing__c trace:peopleTraces){
+            if(!alreadyProcessed.contains(trace.Person_1__c)){
+                cohabitants.add(trace.Person_1__c);
+                alreadyProcessed.add(trace.Person_1__c);
+            }
+            if(!alreadyProcessed.contains(trace.Person_2__c)){
+                cohabitants.add(trace.Person_2__c);
+                alreadyProcessed.add(trace.Person_2__c);
+
+            }
+        }
+        return cohabitants;
+
+    }
+
+    /**
+     * get neighbors
+     * @param Set<Id> personIds
+     * @return Set<Id>
+    */
+    public static  Set<Id> getNeighbors(Set<Id> personIds,Set<Id> alreadyProcessed){
+        Set<Id> neighbors=new Set<Id>();
+        List<People_Tracing__c> peopleTraces=[SELECT Id, Contact_Type__c, Person_1__c, Person_2__c 
+                                              FROM People_Tracing__c WHERE (Person_1__c in:personIds OR Person_2__c in:personIds) 
+                                              AND Contact_Type__c='Neighbour' AND 
+                                              (Person_1__r.Health_Status__c ='Green' 
+                                              OR Person_2__r.Health_Status__c  ='Green')
+                                              ];
+        for(People_Tracing__c trace:peopleTraces){
+            if(!alreadyProcessed.contains(trace.Person_1__c)){
+                neighbors.add(trace.Person_1__c);
+                alreadyProcessed.add(trace.Person_1__c);
+
+            }
+            if(!alreadyProcessed.contains(trace.Person_2__c)){
+                neighbors.add(trace.Person_2__c);
+                alreadyProcessed.add(trace.Person_2__c);
+
+            }
+        }
+        return neighbors;
+
+    }
+
+    /**
+     * get primary contacts
+     * @param Set<Id> personIds
+     * @return Set<Id>
+    */
+    public static  Set<Id> getPrimaryContacts(Set<Id> personIds,Set<Id> alreadyProcessed){
+        Set<Id> primaryContacts=new Set<Id>();
+        List<String> healthStatuses=new List<String>{'Green','Yellow'};
+
+        List<People_Tracing__c> peopleTraces=[SELECT Id, Contact_Type__c, Person_1__c, Person_2__c 
+                                              FROM People_Tracing__c WHERE (Person_1__c in:personIds OR Person_2__c in:personIds) 
+                                              AND Contact_Type__c='Other' AND 
+                                              Contact_Date__c	= LAST_N_DAYS:10 AND
+                                              (Person_1__r.Health_Status__c in:healthStatuses 
+                                              OR Person_2__r.Health_Status__c  in:healthStatuses )
+                                              ];
+        for(People_Tracing__c trace:peopleTraces){
+            if(!alreadyProcessed.contains(trace.Person_1__c)){
+                primaryContacts.add(trace.Person_1__c);
+                alreadyProcessed.add(trace.Person_1__c);
+
+            }
+            if(!alreadyProcessed.contains(trace.Person_2__c)){
+                primaryContacts.add(trace.Person_2__c);
+                alreadyProcessed.add(trace.Person_2__c);
+
+            }
+        }
+        return primaryContacts;
+
+    }
+
+     /**
+     * get secondary contacts
+     * @param Set<Id> personIds
+     * @return Set<Id>
+    */
+    public static  Set<Id> getSecondaryContacts(Set<Id> primaryContactsIds,Set<Id> alreadyProcessed){
+        Set<Id> secondaryContacts=new Set<Id>();
+        List<String> healthStatuses=new List<String>{'Green','Yellow'};
+
+        List<People_Tracing__c> peopleTraces=[SELECT Id, Contact_Type__c, Person_1__c, Person_2__c 
+                                              FROM People_Tracing__c WHERE (Person_1__c in:primaryContactsIds OR Person_2__c in:primaryContactsIds) 
+                                              AND Contact_Type__c='Other' AND 
+                                              Contact_Date__c	= LAST_N_DAYS:10 AND
+                                              (Person_1__r.Health_Status__c in:healthStatuses 
+                                              OR Person_2__r.Health_Status__c  in:healthStatuses )
+                                              ];
+        for(People_Tracing__c trace:peopleTraces){
+            if(!alreadyProcessed.contains(trace.Person_1__c)){
+                secondaryContacts.add(trace.Person_1__c);
+                alreadyProcessed.add(trace.Person_1__c);
+
+            }
+            if(!alreadyProcessed.contains(trace.Person_2__c)){
+                secondaryContacts.add(trace.Person_2__c);
+                alreadyProcessed.add(trace.Person_2__c);
+
+            }
+        }
+        return secondaryContacts;
+
+    }
 }

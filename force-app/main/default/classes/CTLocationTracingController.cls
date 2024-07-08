@@ -3,7 +3,7 @@ public with sharing class CTLocationTracingController {
 
     }
      /**
-     * getVisitors based on locationTracingId
+     * getVisitors based on locationTracingId 
      * @param locationTracingId
      * @return List<Location_Tracing__c>
     */
@@ -40,6 +40,18 @@ public with sharing class CTLocationTracingController {
         FROM Location_Tracing__c WHERE Location__c IN :locationIds 
         AND Person__r.Health_Status__c = 'green'
         AND Visit_Date__c = LAST_N_DAYS:10  ];
+    }
+
+    /**
+     * search getLocationsTraces based on locationIds
+     * @param locationIds
+     * @return List<Location_Tracing__c>
+    */
+    public static List<Location_Tracing__c> getLocationsTraces(Set<Id> locationIds){
+        return [SELECT Id,Person__c,Location__c
+        FROM Location_Tracing__c WHERE Location__c IN :locationIds 
+        AND Visit_Date__c = LAST_N_DAYS:10 AND 
+        Person__r.Health_Status__c='Green'];
     }
     /** 
      * checkDuplicates
