@@ -16,7 +16,8 @@ public with sharing class ContactTriggerHandler {
         for(Contact contact : contactsToUpdate) {
             if(String.isNotBlank(contact.AccountId) && oldContactsMap.get(contact.Id).isActive__c != contact.isActive__c) {
                 accountIds.add(contact.AccountId);
-            } else if(oldContactsMap.get(contact.Id).AccountId != contact.AccountId) {
+            } 
+            if(oldContactsMap.get(contact.Id).AccountId != contact.AccountId) {
                 accountIds.add(contact.AccountId);
                 accountIds.add(oldContactsMap.get(contact.Id).AccountId);
             }
