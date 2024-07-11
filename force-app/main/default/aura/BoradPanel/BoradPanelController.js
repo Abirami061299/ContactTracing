@@ -19,9 +19,11 @@
         const result=event.getParam('result');
         if(result=='win'){
             component.set('v.reshuffleDisable',true);
+            helper.showToast('YOU WIN','HOORAY!','success');
         }
         else{
             component.set('v.reshuffleDisable',false);
+            helper.showToast('YOU LOSE','Reshuffle the board to keep playing!','error');
 
         }
         helper.addResult(component,result);
