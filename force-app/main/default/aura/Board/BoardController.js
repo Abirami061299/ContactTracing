@@ -35,13 +35,13 @@
             component.set("v.result", 'YOU WON');
             console.log('YOU WON');
             helper.disableBoard(component);
-            helper.fireResultEvent('win');
+            helper.fireResultEvent('WIN');
         }
         else if(clickCount === 3){
             component.set("v.result", "YOU LOST");
             console.log('YOU LOST');
             helper.disableBoard(component);
-            helper.fireResultEvent('lose');
+            helper.fireResultEvent('LOSE');
 
         }
         component.set("v.clickCount", clickCount);

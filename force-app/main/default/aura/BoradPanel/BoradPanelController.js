@@ -24,5 +24,7 @@
             component.set('v.reshuffleDisable',false);
 
         }
+        helper.addResult(component,result);
+
     }
 })
