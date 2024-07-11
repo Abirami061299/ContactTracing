@@ -1,0 +1,54 @@
+<aura:component implements="flexipage:availableForAllPageTypes">
+    <aura:attribute name="modes" type="List" default="[
+    {'label': 'Easy', 'value': 'easy'},
+    {'label': 'Medium', 'value': 'medium'},
+    {'label': 'Hard', 'value': 'hard'},
+    ]"/>
+    <aura:attribute name="selectedMode" type="String" />
+    <aura:attribute name="reshuffleDisable" type="Boolean"  default="true"/>
+
+    <aura:handler event="c:ResultApplicationEvent" action="{!c.onResultHandler}"/>
+
+    <lightning:card title="Word Shuffle">
+    
+    <lightning:layout multipleRows="true" horizontalAlign="center">
+        <lightning:layoutItem  padding="around-small">
+            <lightning:combobox 
+              name="gameMode" 
+              aura:id="gameMode"
+              label="Game Mode" 
+              options="{!v.modes}" 
+              value="inProgress" 
+              placeholder="Select Mode" 
+              onchange="{!c.startGame}"
+              variant="label-hidden"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem  padding="around-small">
+            <lightning:button 
+              variant="brand" 
+              label="Start New Game" 
+              title="Start New Game" 
+              class="slds-var-m-left_x-small" 
+              onclick="{!c.startGame}"/>
+       </lightning:layoutItem>
+       <lightning:layoutItem  padding="around-small">
+        <lightning:button  
+           variant="Neutral" 
+           label="Reshuffle" 
+           title="Reshuffle"  
+           class="slds-var-m-left_x-small"
+           disabled="{!v.reshuffleDisable}"
+           onclick="{!c.reshuffleBoard}"/>
+        </lightning:layoutItem>
+        <aura:if isTrue="{!(v.selectedMode != null)}">
+            <lightning:layoutItem size="12">
+                <c:Board aura:id="boardComp" mode="{!v.selectedMode}"></c:Board>
+            </lightning:layoutItem>
+             <!-- <aura:set attribute="else">
+               else part
+            </aura:set> -->
+        </aura:if>
+    </lightning:layout>
+    </lightning:card>
+   
+</aura:component>
