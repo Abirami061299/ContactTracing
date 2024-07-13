@@ -1,0 +1,68 @@
+<aura:component implements="force:appHostable" controller="CTLocationTabController">
+    <aura:attribute name="issearching" type="Boolean" default="false" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="locationDetail" type="Object" />
+    <aura:attribute name="locationFound" type="Boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <lightning:card title="Location Trace">
+        <aura:set attribute="actions">
+            <div onkeyup="{! c.handleKeyUp }">
+                <lightning:input aura:id="enter-search" name="enter-search"
+                    label="Search when user hits the 'enter' key" isLoading="{! v.issearching }" type="search"
+                    placeholder="Search here..." />
+            </div>
+        </aura:set>
+
+        <aura:if isTrue="{! v.locationFound}">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="12">
+                    <div class="slds-grid slds-wrap slds-p-horizontal_medium slds-text-heading_small">
+                        <div class="slds-col slds-size_2-of-6">
+                            <span >Name: </span>
+                            <span>{!v.locationDetail.name}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Address: </span>
+                            <span>{!v.locationDetail.address}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>PinCode: </span>
+                            <span>{!v.locationDetail.pinCode}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Status: </span>
+                            <span>{!v.locationDetail.status}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>RedScore: </span>
+                            <span>{!v.locationDetail.redScore}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Contact's Count: </span>
+                            <span>{!v.locationDetail.contactsCount}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Status Updated On: </span>
+                            <span>{!v.locationDetail.statusUpdateOn}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Token: </span>
+                            <span>{!v.locationDetail.token}</span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12">
+                    <lightning:datatable keyField="id" data="{! v.locationDetail.contacts }" columns="{! v.columns }"
+                        hideCheckboxColumn="true" />
+                </lightning:layoutItem>
+            </lightning:layout>
+            <aura:set attribute="else">
+                <div class="slds-align_absolute-center slds-text-heading_large" style="height:5rem">
+                    Location Record Not Found</div>
+           </aura:set>
+        </aura:if>
+
+    </lightning:card>
+</aura:component>	

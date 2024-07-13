@@ -15,6 +15,18 @@ public with sharing class CTLocationTracingController {
                 ORDER BY Visit_Date__c DESC];
     }
     
+    /**
+     * getVisitors of last 30 days based on locationId  
+     * @param locationId
+     * @return List<Location_Tracing__c>
+    */
+    public static List<Location_Tracing__c> getVisitorsOfLast30days(String locationId){
+        return [SELECT Id, Name, Person__c,Person__r.Name,
+                Person__r.Health_Status__c,Person__r.Token__c, 
+                Location__c,Location__r.Name, Visit_Date__c 
+                FROM Location_Tracing__c WHERE Location__c=:locationId AND Visit_Date__c=LAST_N_DAYS:30
+                ORDER BY Visit_Date__c DESC];
+    }
      /**
      * search locations based on personIds
      * @param personIds
