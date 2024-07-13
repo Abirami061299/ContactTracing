@@ -1,0 +1,60 @@
+<aura:component implements="force:appHostable" controller="CTUserTabController">
+    <aura:attribute name="issearching" type="Boolean" default="false" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="personDetail" type="Object" />
+    <aura:attribute name="userFound" type="Boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <lightning:card title="Person Trace">
+        <aura:set attribute="actions">
+            <div onkeyup="{! c.handleKeyUp }">
+                <lightning:input aura:id="enter-search" name="enter-search"
+                    label="Search when user hits the 'enter' key" isLoading="{! v.issearching }" type="search"
+                    placeholder="Search here..." />
+            </div>
+        </aura:set>
+
+        <aura:if isTrue="{! v.userFound}">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="12">
+                    <div class="slds-grid slds-wrap slds-p-horizontal_medium slds-text-heading_small">
+                        <div class="slds-col slds-size_2-of-6">
+                            <span >Name: </span>
+                            <span>{!v.personDetail.name}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Health Status: </span>
+                            <span>{!v.personDetail.status}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Mobile No: </span>
+                            <span>{!v.personDetail.phone}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Contact's Count: </span>
+                            <span>{!v.personDetail.contactsCount}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Status Updated On: </span>
+                            <span>{!v.personDetail.statusUpdateOn}</span>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <span>Token: </span>
+                            <span>{!v.personDetail.token}</span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12">
+                    <lightning:datatable keyField="id" data="{! v.personDetail.contacts }" columns="{! v.columns }"
+                        hideCheckboxColumn="true" />
+                </lightning:layoutItem>
+            </lightning:layout>
+            <aura:set attribute="else">
+                <div class="slds-align_absolute-center slds-text-heading_large" style="height:5rem">
+                    Person Record Not Found</div>
+           </aura:set>
+        </aura:if>
+
+    </lightning:card>
+</aura:component>

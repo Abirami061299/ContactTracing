@@ -184,4 +184,16 @@ public with sharing class CTPersonController {
         return secondaryContacts;
 
     }
+
+    public static Map<String,Integer> getPersonHealthStatusCount(){
+        AggregateResult[] healthCount = [SELECT  Health_Status__c, COUNT(Id) total FROM Person__c GROUP BY Health_Status__c];
+        if(healthCount!=null && healthCount.size()>0){
+            Map<String,Integer> healthCountMap=new Map<String,Integer>();
+            for(AggregateResult ar:healthCount){
+                 healthCountMap.put(String.valueOf(ar.get('Health_Status__c')),Integer.valueOf(ar.get('total')));
+            }
+            return healthCountMap;
+        }
+        return null;
+    }
 }
